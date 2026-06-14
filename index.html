@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketing Brief Generator</title>
+  <style>
+    :root {
+      --accent: #185FA5;
+      --accent-light: #e8f0fb;
+      --bg: #f5f6f8;
+      --surface: #ffffff;
+      --border: #e0e3e8;
+      --text: #1a1d23;
+      --text-muted: #6b7280;
+      --chip-bg: #eef0f3;
+      --chip-active-bg: var(--accent);
+      --chip-active-text: #fff;
+      --divider: #e8eaed;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1117;
+        --surface: #1c1f27;
+        --border: #2e3340;
+        --text: #e8eaf0;
+        --text-muted: #9ca3af;
+        --chip-bg: #252833;
+        --accent-light: #1a2a3f;
+        --divider: #2e3340;
+      }
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 16px 64px;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    header { margin-bottom: 32px; }
+    header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+    header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { border-color: var(--accent); }
+
+    .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+    .chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: var(--chip-bg);
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .chip.active { background: var(--chip-active-bg); color: var(--chip-active-text); border-color: var(--chip-active-bg); }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
+
+    .api-row { margin-top: 16px; }
+    .api-row input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      font-family: monospace;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .api-row input:focus { border-color: var(--accent); }
+
+    .generate-btn {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .generate-btn:hover { opacity: 0.88; }
+    .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+    }
+    .empty-state svg { margin-bottom: 12px; opacity: 0.35; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* Spinner */
+    .spinner-wrap { display: flex; align-items: center; justify-content: center; padding: 48px; }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Brief card */
+    .brief-card { display: none; }
+    .brief-card.visible { display: block; }
+    .brief-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .brief-header h2 { font-size: 1.1rem; font-weight: 700; }
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+    .brief-actions { display: flex; gap: 8px; }
+    .icon-btn {
+      padding: 7px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 5px;
+      transition: border-color 0.12s, color 0.12s;
+    }
+    .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .icon-btn.copied { border-color: #22c55e; color: #22c55e; }
+
+    .brief-section { padding: 16px 0; border-top: 1px solid var(--divider); }
+    .brief-section:first-child { border-top: none; padding-top: 0; }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .section-body { font-size: 0.93rem; line-height: 1.6; color: var(--text); }
+
+    /* KPI pills */
+    .kpi-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .kpi-pill {
+      padding: 5px 12px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    .error-msg {
+      background: #fff0f0;
+      border: 1px solid #fca5a5;
+      color: #b91c1c;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    @media (prefers-color-scheme: dark) {
+      .error-msg { background: #2d1515; border-color: #7f1d1d; color: #fca5a5; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Marketing Brief Generator</h1>
+    <p>Describe your campaign and get a full strategic brief in seconds.</p>
+  </header>
+
+  <!-- Input card -->
+  <div class="card">
+    <div style="margin-bottom:18px">
+      <label for="description">Campaign description</label>
+      <textarea id="description" placeholder="e.g. We're launching a new line of sustainable running shoes targeting Gen Z athletes who care about the environment…"></textarea>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Tone</label>
+        <div class="chip-group" id="tone-chips">
+          <div class="chip" data-group="tone">Energetic</div>
+          <div class="chip" data-group="tone">Professional</div>
+          <div class="chip" data-group="tone">Playful</div>
+          <div class="chip" data-group="tone">Inspirational</div>
+          <div class="chip" data-group="tone">Urgent</div>
+        </div>
+      </div>
+      <div>
+        <label>Channels</label>
+        <div class="chip-group" id="channel-chips">
+          <div class="chip" data-group="channel">Social media</div>
+          <div class="chip" data-group="channel">Email</div>
+          <div class="chip" data-group="channel">Paid ads</div>
+          <div class="chip" data-group="channel">SMS</div>
+          <div class="chip" data-group="channel">In-app</div>
+          <div class="chip" data-group="channel">Omnichannel</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="api-row">
+      <label for="api-key">Anthropic API key</label>
+      <input type="password" id="api-key" placeholder="sk-ant-…" autocomplete="off" />
+    </div>
+
+    <button class="generate-btn" id="generate-btn">Generate Brief</button>
+  </div>
+
+  <!-- Error -->
+  <div class="error-msg" id="error-msg"></div>
+
+  <!-- Output area -->
+  <div class="card" id="output-card">
+    <!-- Empty state -->
+    <div class="empty-state" id="empty-state">
+      <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <p>Your generated brief will appear here.</p>
+    </div>
+
+    <!-- Spinner -->
+    <div class="spinner-wrap" id="spinner" style="display:none">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Brief -->
+    <div class="brief-card" id="brief-card">
+      <div class="brief-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <h2>Campaign Brief</h2>
+          <span class="badge">AI generated</span>
+        </div>
+        <div class="brief-actions">
+          <button class="icon-btn" id="copy-btn">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+          <button class="icon-btn" id="regen-btn">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Regenerate
+          </button>
+        </div>
+      </div>
+      <div id="brief-sections"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Chip single-select (tone) / multi-select (channel)
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const group = chip.dataset.group;
+      if (group === 'tone') {
+        document.querySelectorAll(`[data-group="tone"]`).forEach(c => c.classList.remove('active'));
+        chip.classList.toggle('active');
+      } else {
+        chip.classList.toggle('active');
+      }
+    });
+  });
+
+  function getSelected(group) {
+    return [...document.querySelectorAll(`[data-group="${group}"].active`)].map(c => c.textContent);
+  }
+
+  function buildPrompt(description, tone, channels) {
+    const toneStr = tone.length ? tone[0] : 'Professional';
+    const channelsStr = channels.length ? channels.join(', ') : 'Omnichannel';
+    return `You are a senior marketing strategist. Based on the campaign description below, create a structured marketing campaign brief. Return EXACTLY these 6 labeled sections, each on its own line starting with the label followed by a colon. Do not add any other text before or after.
+
+Objective: <one sentence campaign objective>
+Target Audience: <detailed description of the ideal customer>
+Key Messages: <2-4 core messages, separated by " | ">
+Channels & Tactics: <specific tactics for ${channelsStr}>
+KPIs: <5-7 measurable KPIs, separated by " | ">
+Creative Direction: <tone, visual style, and content direction>
+
+Campaign description: ${description}
+Tone: ${toneStr}
+Channels: ${channelsStr}`;
+  }
+
+  function parseResponse(text) {
+    const sections = [
+      { key: 'Objective', label: 'Objective' },
+      { key: 'Target Audience', label: 'Target Audience' },
+      { key: 'Key Messages', label: 'Key Messages' },
+      { key: 'Channels & Tactics', label: 'Channels & Tactics' },
+      { key: 'KPIs', label: 'KPIs' },
+      { key: 'Creative Direction', label: 'Creative Direction' },
+    ];
+    const result = [];
+    for (const s of sections) {
+      const regex = new RegExp(`${s.key}:\\s*(.+)`, 'i');
+      const match = text.match(regex);
+      result.push({ label: s.label, value: match ? match[1].trim() : '' });
+    }
+    return result;
+  }
+
+  function renderBrief(sections) {
+    const container = document.getElementById('brief-sections');
+    container.innerHTML = '';
+    for (const s of sections) {
+      const div = document.createElement('div');
+      div.className = 'brief-section';
+      const title = document.createElement('div');
+      title.className = 'section-title';
+      title.textContent = s.label;
+      div.appendChild(title);
+
+      if (s.label === 'KPIs' && s.value) {
+        const grid = document.createElement('div');
+        grid.className = 'kpi-grid';
+        s.value.split('|').forEach(kpi => {
+          const pill = document.createElement('span');
+          pill.className = 'kpi-pill';
+          pill.textContent = kpi.trim();
+          grid.appendChild(pill);
+        });
+        div.appendChild(grid);
+      } else if (s.label === 'Key Messages' && s.value) {
+        const body = document.createElement('div');
+        body.className = 'section-body';
+        body.innerHTML = s.value.split('|').map(m => `• ${m.trim()}`).join('<br>');
+        div.appendChild(body);
+      } else {
+        const body = document.createElement('div');
+        body.className = 'section-body';
+        body.textContent = s.value || '—';
+        div.appendChild(body);
+      }
+      container.appendChild(div);
+    }
+  }
+
+  function setState(state) {
+    document.getElementById('empty-state').style.display = state === 'empty' ? '' : 'none';
+    document.getElementById('spinner').style.display = state === 'loading' ? 'flex' : 'none';
+    document.getElementById('brief-card').classList.toggle('visible', state === 'brief');
+  }
+
+  async function generate() {
+    const description = document.getElementById('description').value.trim();
+    const apiKey = document.getElementById('api-key').value.trim();
+    const errEl = document.getElementById('error-msg');
+    errEl.style.display = 'none';
+
+    if (!description) { showError('Please enter a campaign description.'); return; }
+    if (!apiKey) { showError('Please enter your Anthropic API key.'); return; }
+
+    const tone = getSelected('tone');
+    const channels = getSelected('channel');
+    const prompt = buildPrompt(description, tone, channels);
+
+    document.getElementById('generate-btn').disabled = true;
+    setState('loading');
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }],
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `API error ${res.status}`);
+      }
+
+      const data = await res.json();
+      const text = data.content?.[0]?.text || '';
+      const sections = parseResponse(text);
+      renderBrief(sections);
+      setState('brief');
+    } catch (e) {
+      setState('empty');
+      showError(e.message || 'Something went wrong. Please try again.');
+    } finally {
+      document.getElementById('generate-btn').disabled = false;
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function copyBrief() {
+    const sections = [...document.querySelectorAll('.brief-section')];
+    const text = sections.map(s => {
+      const title = s.querySelector('.section-title').textContent;
+      const body = s.querySelector('.section-body, .kpi-grid');
+      return `${title}\n${body ? body.innerText : ''}`;
+    }).join('\n\n');
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.classList.add('copied');
+      btn.querySelector('svg').style.display = 'none';
+      btn.childNodes[btn.childNodes.length - 1].textContent = ' Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.querySelector('svg').style.display = '';
+        btn.childNodes[btn.childNodes.length - 1].textContent = ' Copy';
+      }, 2000);
+    });
+  }
+
+  document.getElementById('generate-btn').addEventListener('click', generate);
+  document.getElementById('regen-btn').addEventListener('click', generate);
+  document.getElementById('copy-btn').addEventListener('click', copyBrief);
+</script>
+</body>
+</html>
