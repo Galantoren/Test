@@ -87,8 +87,25 @@
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
 
-    .api-row { margin-top: 16px; }
-    .api-row input {
+    /* API key modal */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      width: 100%; max-width: 420px;
+    }
+    .modal h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+    .modal p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5; }
+    .modal input {
       width: 100%;
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -98,9 +115,32 @@
       background: var(--bg);
       color: var(--text);
       outline: none;
+      margin-bottom: 14px;
       transition: border-color 0.15s;
     }
-    .api-row input:focus { border-color: var(--accent); }
+    .modal input:focus { border-color: var(--accent); }
+    .modal-save {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .modal-save:hover { opacity: 0.88; }
+    .key-hint {
+      margin-top: 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .key-hint button {
+      background: none; border: none; color: var(--accent);
+      font-size: 0.8rem; cursor: pointer; padding: 0;
+    }
 
     .generate-btn {
       display: block;
@@ -253,12 +293,22 @@
       </div>
     </div>
 
-    <div class="api-row">
-      <label for="api-key">Anthropic API key</label>
-      <input type="password" id="api-key" placeholder="sk-ant-…" autocomplete="off" />
+    <div class="key-hint" id="key-hint" style="display:none">
+      <span>API key saved</span>
+      <button id="change-key-btn">Change key</button>
     </div>
 
     <button class="generate-btn" id="generate-btn">Generate Brief</button>
+  </div>
+
+  <!-- API key modal -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal">
+      <h2>Enter your Anthropic API key</h2>
+      <p>Your key is saved only in this browser and never sent anywhere except the Anthropic API.</p>
+      <input type="password" id="api-key-input" placeholder="sk-ant-…" autocomplete="off" />
+      <button class="modal-save" id="modal-save-btn">Save & Continue</button>
+    </div>
   </div>
 
   <!-- Error -->
@@ -303,6 +353,45 @@
 </div>
 
 <script>
+  // API key stored in localStorage
+  const LS_KEY = 'mbg_api_key';
+
+  function getSavedKey() { return localStorage.getItem(LS_KEY) || ''; }
+  function saveKey(key) { localStorage.setItem(LS_KEY, key); }
+
+  function updateKeyHint() {
+    const hint = document.getElementById('key-hint');
+    hint.style.display = getSavedKey() ? 'flex' : 'none';
+  }
+
+  function openModal() {
+    document.getElementById('api-key-input').value = getSavedKey();
+    document.getElementById('modal-overlay').classList.remove('hidden');
+    document.getElementById('api-key-input').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.add('hidden');
+  }
+
+  document.getElementById('modal-save-btn').addEventListener('click', () => {
+    const key = document.getElementById('api-key-input').value.trim();
+    if (!key) return;
+    saveKey(key);
+    updateKeyHint();
+    closeModal();
+  });
+
+  document.getElementById('api-key-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('modal-save-btn').click();
+  });
+
+  document.getElementById('change-key-btn').addEventListener('click', openModal);
+
+  // Show modal on first load if no key saved
+  if (!getSavedKey()) openModal();
+  updateKeyHint();
+
   // Chip single-select (tone) / multi-select (channel)
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
@@ -399,12 +488,12 @@ Channels: ${channelsStr}`;
 
   async function generate() {
     const description = document.getElementById('description').value.trim();
-    const apiKey = document.getElementById('api-key').value.trim();
+    const apiKey = getSavedKey();
     const errEl = document.getElementById('error-msg');
     errEl.style.display = 'none';
 
     if (!description) { showError('Please enter a campaign description.'); return; }
-    if (!apiKey) { showError('Please enter your Anthropic API key.'); return; }
+    if (!apiKey) { openModal(); return; }
 
     const tone = getSelected('tone');
     const channels = getSelected('channel');
