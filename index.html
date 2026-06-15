@@ -205,6 +205,7 @@
         </div>
       </div>
       <div id="brief-sections"></div>
+      <button class="btn" id="next-to-brand-btn" style="display:none;margin-top:20px">Next: Add Brand Identity →</button>
     </div>
   </div>
 
@@ -280,7 +281,7 @@
       <span class="swatch-sm" id="sw-text"></span>
     </div>
 
-    <button class="btn" id="build-template-btn">Build Template</button>
+    <button class="btn" id="build-template-btn">Next: Build Template →</button>
   </div>
 
   <!-- Step 3: Template -->
@@ -423,6 +424,7 @@ function generate() {
   if (!description) { errEl.textContent = 'Please enter a campaign description.'; errEl.style.display = 'block'; return; }
   setBriefState('loading');
   document.getElementById('generate-btn').disabled = true;
+  document.getElementById('next-to-brand-btn').style.display = 'none';
   document.getElementById('brand-card').classList.add('locked');
   document.getElementById('template-card').classList.add('locked');
   setTimeout(() => {
@@ -432,8 +434,7 @@ function generate() {
     renderBriefSections(currentBrief.sections);
     setBriefState('brief');
     document.getElementById('generate-btn').disabled = false;
-    document.getElementById('brand-card').classList.remove('locked');
-    document.getElementById('brand-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    document.getElementById('next-to-brand-btn').style.display = 'block';
   }, 900);
 }
 
@@ -836,12 +837,17 @@ document.getElementById('build-template-btn').addEventListener('click', () => {
   const templates = buildTemplates(currentBrief, brand);
   renderTemplates(templates);
   document.getElementById('template-card').classList.remove('locked');
-  document.getElementById('template-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  document.getElementById('template-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
 document.getElementById('generate-btn').addEventListener('click', generate);
 document.getElementById('regen-btn').addEventListener('click', generate);
 document.getElementById('copy-btn').addEventListener('click', copyBrief);
+
+document.getElementById('next-to-brand-btn').addEventListener('click', () => {
+  document.getElementById('brand-card').classList.remove('locked');
+  document.getElementById('brand-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 </script>
 </body>
 </html>
