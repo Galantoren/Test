@@ -20,201 +20,138 @@
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #0f1117;
-        --surface: #1c1f27;
-        --border: #2e3340;
-        --text: #e8eaf0;
-        --text-muted: #9ca3af;
-        --chip-bg: #252833;
-        --accent-light: #1a2a3f;
-        --divider: #2e3340;
+        --bg: #0f1117; --surface: #1c1f27; --border: #2e3340;
+        --text: #e8eaf0; --text-muted: #9ca3af; --chip-bg: #252833;
+        --accent-light: #1a2a3f; --divider: #2e3340;
       }
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 32px 16px 64px;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 32px 16px 64px; }
     .container { max-width: 720px; margin: 0 auto; }
     header { margin-bottom: 32px; }
     header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
     header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
 
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 20px;
-    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+    .card-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; }
 
     label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-    textarea {
-      width: 100%;
-      min-height: 110px;
-      resize: vertical;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 0.95rem;
-      font-family: inherit;
-      background: var(--bg);
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.15s;
-    }
+    textarea { width: 100%; min-height: 110px; resize: vertical; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 0.95rem; font-family: inherit; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; }
     textarea:focus { border-color: var(--accent); }
 
     .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
-    .chip {
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      background: var(--chip-bg);
-      color: var(--text-muted);
-      border: 1px solid transparent;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.12s, color 0.12s, border-color 0.12s;
-    }
+    .chip { padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; background: var(--chip-bg); color: var(--text-muted); border: 1px solid transparent; cursor: pointer; user-select: none; transition: background 0.12s, color 0.12s, border-color 0.12s; }
     .chip:hover { border-color: var(--accent); color: var(--accent); }
     .chip.active { background: var(--chip-active-bg); color: var(--chip-active-text); border-color: var(--chip-active-bg); }
 
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
 
+    .btn { display: block; width: 100%; padding: 13px; border: none; border-radius: 8px; background: var(--accent); color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.15s; margin-top: 20px; }
+    .btn:hover { opacity: 0.88; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-outline { background: none; border: 1px solid var(--border); color: var(--text); margin-top: 12px; }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); opacity: 1; }
 
-    .generate-btn {
-      display: block;
-      width: 100%;
-      margin-top: 20px;
-      padding: 13px;
-      border: none;
-      border-radius: 8px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
-    .generate-btn:hover { opacity: 0.88; }
-    .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* Empty state */
-    .empty-state {
-      text-align: center;
-      padding: 48px 24px;
-      color: var(--text-muted);
-    }
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); }
     .empty-state svg { margin-bottom: 12px; opacity: 0.35; }
     .empty-state p { font-size: 0.9rem; }
 
-    /* Spinner */
     .spinner-wrap { display: flex; align-items: center; justify-content: center; padding: 48px; }
-    .spinner {
-      width: 36px; height: 36px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
+    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Brief card */
     .brief-card { display: none; }
     .brief-card.visible { display: block; }
-    .brief-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+    .brief-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
     .brief-header h2 { font-size: 1.1rem; font-weight: 700; }
-    .badge {
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 3px 10px;
-      border-radius: 20px;
-      background: var(--accent-light);
-      color: var(--accent);
-    }
+    .badge { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 20px; background: var(--accent-light); color: var(--accent); }
     .brief-actions { display: flex; gap: 8px; }
-    .icon-btn {
-      padding: 7px 14px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--surface);
-      color: var(--text);
-      font-size: 0.82rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex; align-items: center; gap: 5px;
-      transition: border-color 0.12s, color 0.12s;
-    }
+    .icon-btn { padding: 7px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); font-size: 0.82rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: border-color 0.12s, color 0.12s; }
     .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
     .icon-btn.copied { border-color: #22c55e; color: #22c55e; }
 
     .brief-section { padding: 16px 0; border-top: 1px solid var(--divider); }
     .brief-section:first-child { border-top: none; padding-top: 0; }
-    .section-title {
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
+    .section-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); margin-bottom: 8px; }
     .section-body { font-size: 0.93rem; line-height: 1.6; color: var(--text); }
-
-    /* KPI pills */
     .kpi-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-    .kpi-pill {
-      padding: 5px 12px;
-      background: var(--accent-light);
-      color: var(--accent);
-      border-radius: 20px;
-      font-size: 0.82rem;
-      font-weight: 500;
-    }
+    .kpi-pill { padding: 5px 12px; background: var(--accent-light); color: var(--accent); border-radius: 20px; font-size: 0.82rem; font-weight: 500; }
 
-    .error-msg {
-      background: #fff0f0;
-      border: 1px solid #fca5a5;
-      color: #b91c1c;
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 0.88rem;
-      margin-bottom: 16px;
-      display: none;
-    }
-    @media (prefers-color-scheme: dark) {
-      .error-msg { background: #2d1515; border-color: #7f1d1d; color: #fca5a5; }
-    }
+    .error-msg { background: #fff0f0; border: 1px solid #fca5a5; color: #b91c1c; border-radius: 8px; padding: 12px 16px; font-size: 0.88rem; margin-bottom: 16px; display: none; }
+    @media (prefers-color-scheme: dark) { .error-msg { background: #2d1515; border-color: #7f1d1d; color: #fca5a5; } }
+
+    /* ── Brand section ── */
+    #brand-card { display: none; }
+    .tab-bar { display: flex; gap: 4px; background: var(--bg); border-radius: 8px; padding: 4px; margin-bottom: 20px; }
+    .tab { flex: 1; padding: 8px; border: none; border-radius: 6px; background: none; color: var(--text-muted); font-size: 0.88rem; font-weight: 500; cursor: pointer; transition: background 0.12s, color 0.12s; }
+    .tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* URL panel */
+    .url-input-row { display: flex; gap: 8px; }
+    .url-input-row input { flex: 1; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 0.9rem; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; }
+    .url-input-row input:focus { border-color: var(--accent); }
+    .url-input-row button { padding: 10px 18px; border: none; border-radius: 8px; background: var(--accent); color: #fff; font-size: 0.88rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .url-preview { margin-top: 14px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; position: relative; height: 200px; display: none; }
+    .url-preview iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
+    .url-preview-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.25); }
+    .pick-btn { padding: 9px 18px; border: none; border-radius: 8px; background: #fff; color: #111; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .extracted-colors { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .color-swatch { width: 36px; height: 36px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; transition: transform 0.1s, border-color 0.1s; }
+    .color-swatch:hover { transform: scale(1.1); }
+    .color-swatch.selected { border-color: var(--accent); }
+
+    /* File panel */
+    .drop-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 32px; text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; position: relative; }
+    .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); background: var(--accent-light); }
+    .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .drop-zone p { color: var(--text-muted); font-size: 0.88rem; margin-top: 8px; }
+    .file-preview-wrap { margin-top: 14px; display: none; }
+    .file-preview-wrap img { max-height: 120px; border-radius: 8px; border: 1px solid var(--border); }
+
+    /* Color panel */
+    .color-pickers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .color-picker-item label { font-size: 0.8rem; margin-bottom: 6px; }
+    .color-picker-item input[type=color] { width: 100%; height: 44px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: none; padding: 4px; }
+
+    /* Brand summary bar */
+    .brand-summary { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--divider); }
+    .brand-summary-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .swatch-sm { width: 24px; height: 24px; border-radius: 4px; border: 1px solid var(--border); display: inline-block; }
+
+    /* ── Template output ── */
+    #template-card { display: none; }
+    .template-tabs { display: flex; gap: 4px; background: var(--bg); border-radius: 8px; padding: 4px; margin-bottom: 16px; overflow-x: auto; }
+    .template-tab { padding: 7px 14px; border: none; border-radius: 6px; background: none; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background 0.12s, color 0.12s; }
+    .template-tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .template-panel { display: none; }
+    .template-panel.active { display: block; }
+    .template-preview { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 12px; }
+    .template-preview iframe { width: 100%; border: none; display: block; }
+    .template-code { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-family: monospace; font-size: 0.78rem; color: var(--text); white-space: pre-wrap; word-break: break-all; max-height: 260px; overflow-y: auto; margin-bottom: 12px; display: none; }
+    .template-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tpl-btn { padding: 8px 16px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); font-size: 0.82rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: border-color 0.12s, color 0.12s; }
+    .tpl-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tpl-btn.active-view { border-color: var(--accent); color: var(--accent); }
   </style>
 </head>
 <body>
 <div class="container">
   <header>
     <h1>Marketing Brief Generator</h1>
-    <p>Describe your campaign and get a full strategic brief in seconds.</p>
+    <p>Describe your campaign and get a full strategic brief and template in seconds.</p>
   </header>
 
-  <!-- Input card -->
+  <!-- Step 1: Input -->
   <div class="card">
+    <div class="card-title"><span class="step-num">1</span> Campaign details</div>
     <div style="margin-bottom:18px">
       <label for="description">Campaign description</label>
       <textarea id="description" placeholder="e.g. We're launching a new line of sustainable running shoes targeting Gen Z athletes who care about the environment…"></textarea>
     </div>
-
     <div class="row">
       <div>
         <label>Tone</label>
@@ -238,211 +175,667 @@
         </div>
       </div>
     </div>
-
-    <button class="generate-btn" id="generate-btn">Generate Brief</button>
+    <button class="btn" id="generate-btn">Generate Brief</button>
   </div>
 
-  <!-- Error -->
   <div class="error-msg" id="error-msg"></div>
 
-  <!-- Output area -->
+  <!-- Step 1 output: Brief -->
   <div class="card" id="output-card">
-    <!-- Empty state -->
     <div class="empty-state" id="empty-state">
-      <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
+      <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
       <p>Your generated brief will appear here.</p>
     </div>
-
-    <!-- Spinner -->
-    <div class="spinner-wrap" id="spinner" style="display:none">
-      <div class="spinner"></div>
-    </div>
-
-    <!-- Brief -->
+    <div class="spinner-wrap" id="spinner" style="display:none"><div class="spinner"></div></div>
     <div class="brief-card" id="brief-card">
       <div class="brief-header">
         <div style="display:flex;align-items:center;gap:10px">
           <h2>Campaign Brief</h2>
-          <span class="badge">AI generated</span>
+          <span class="badge">Generated</span>
         </div>
         <div class="brief-actions">
           <button class="icon-btn" id="copy-btn">
-            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            Copy
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy
           </button>
           <button class="icon-btn" id="regen-btn">
-            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            Regenerate
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>Regenerate
           </button>
         </div>
       </div>
       <div id="brief-sections"></div>
     </div>
   </div>
+
+  <!-- Step 2: Brand -->
+  <div class="card" id="brand-card">
+    <div class="card-title"><span class="step-num">2</span> Brand identity</div>
+    <div class="tab-bar">
+      <button class="tab active" data-tab="url">🌐 URL</button>
+      <button class="tab" data-tab="file">🖼 File</button>
+      <button class="tab" data-tab="colors">🎨 Colors</button>
+    </div>
+
+    <!-- URL panel -->
+    <div class="tab-panel active" id="tab-url">
+      <div class="url-input-row">
+        <input type="url" id="brand-url" placeholder="https://brand.com" />
+        <button id="load-url-btn">Load</button>
+      </div>
+      <div class="url-preview" id="url-preview">
+        <iframe id="brand-iframe" sandbox="allow-same-origin allow-scripts"></iframe>
+        <div class="url-preview-overlay">
+          <button class="pick-btn" id="eyedropper-btn">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            Pick color from page
+          </button>
+        </div>
+      </div>
+      <div class="extracted-colors" id="extracted-colors"></div>
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px" id="url-note"></p>
+    </div>
+
+    <!-- File panel -->
+    <div class="tab-panel" id="tab-file">
+      <div class="drop-zone" id="drop-zone">
+        <input type="file" id="file-input" accept="image/*" />
+        <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="color:var(--text-muted)"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <p>Drop a logo or brand image, or click to upload</p>
+      </div>
+      <div class="file-preview-wrap" id="file-preview-wrap">
+        <img id="file-preview-img" alt="Brand image" />
+        <div class="extracted-colors" id="file-extracted-colors" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- Colors panel -->
+    <div class="tab-panel" id="tab-colors">
+      <div class="color-pickers">
+        <div class="color-picker-item">
+          <label>Primary color</label>
+          <input type="color" id="color-primary" value="#185FA5" />
+        </div>
+        <div class="color-picker-item">
+          <label>Secondary color</label>
+          <input type="color" id="color-secondary" value="#F5A623" />
+        </div>
+        <div class="color-picker-item">
+          <label>Background</label>
+          <input type="color" id="color-bg" value="#FFFFFF" />
+        </div>
+        <div class="color-picker-item">
+          <label>Text color</label>
+          <input type="color" id="color-text" value="#1a1d23" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand summary -->
+    <div class="brand-summary" id="brand-summary" style="display:none">
+      <span class="brand-summary-label">Brand colors</span>
+      <span class="swatch-sm" id="sw-primary"></span>
+      <span class="swatch-sm" id="sw-secondary"></span>
+      <span class="swatch-sm" id="sw-bg"></span>
+      <span class="swatch-sm" id="sw-text"></span>
+    </div>
+
+    <button class="btn" id="build-template-btn">Build Template</button>
+  </div>
+
+  <!-- Step 3: Template -->
+  <div class="card" id="template-card">
+    <div class="card-title"><span class="step-num">3</span> Campaign template</div>
+    <div class="template-tabs" id="template-tabs"></div>
+    <div id="template-panels"></div>
+  </div>
 </div>
 
+<canvas id="color-canvas" style="display:none"></canvas>
+
 <script>
-  // Chip single-select (tone) / multi-select (channel)
-  document.querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const group = chip.dataset.group;
-      if (group === 'tone') {
-        document.querySelectorAll('[data-group="tone"]').forEach(c => c.classList.remove('active'));
-        chip.classList.toggle('active');
-      } else {
-        chip.classList.toggle('active');
-      }
-    });
+// ── Chip selection ──────────────────────────────────────────────
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const group = chip.dataset.group;
+    if (group === 'tone') {
+      document.querySelectorAll('[data-group="tone"]').forEach(c => c.classList.remove('active'));
+      chip.classList.toggle('active');
+    } else {
+      chip.classList.toggle('active');
+    }
   });
+});
+function getSelected(group) {
+  return [...document.querySelectorAll(`[data-group="${group}"].active`)].map(c => c.textContent.trim());
+}
 
-  function getSelected(group) {
-    return [...document.querySelectorAll(`[data-group="${group}"].active`)].map(c => c.textContent);
-  }
+// ── Tab switching ───────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + target).classList.add('active');
+  });
+});
 
-  function generateBrief(description, tone, channels) {
-    const toneStr = tone.length ? tone[0] : 'Professional';
-    const channelsStr = channels.length ? channels.join(', ') : 'Omnichannel';
+// ── Brief generation ────────────────────────────────────────────
+let currentBrief = null;
 
-    const words = description.toLowerCase().split(/\s+/);
-    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-    const audienceMap = {
-      gen: 'Gen Z consumers aged 18–26', millennial: 'Millennials aged 28–40',
-      business: 'B2B decision-makers and team leads', professional: 'Working professionals aged 30–50',
-      student: 'College students and young adults', parent: 'Parents aged 30–45',
-      default: 'Adults aged 25–45 with disposable income and an active digital lifestyle',
-    };
-    const audience = Object.keys(audienceMap).find(k => words.includes(k))
-      ? audienceMap[Object.keys(audienceMap).find(k => words.includes(k))]
-      : audienceMap.default;
-
-    const toneGuides = {
-      Energetic: { visual: 'bold colors, dynamic layouts, motion graphics', copy: 'punchy headlines and action-driven CTAs' },
-      Professional: { visual: 'clean lines, neutral palette, structured grids', copy: 'authoritative, data-backed messaging' },
-      Playful: { visual: 'bright palette, illustrated elements, rounded shapes', copy: 'witty micro-copy and conversational tone' },
-      Inspirational: { visual: 'aspirational photography, whitespace, warm tones', copy: 'story-driven narratives that evoke emotion' },
-      Urgent: { visual: 'high-contrast, countdown elements, bold typography', copy: 'scarcity-focused CTAs and direct language' },
-    };
-    const tg = toneGuides[toneStr] || toneGuides.Professional;
-
-    const tacticsByChannel = {
-      'Social media': 'Short-form video (Reels/TikTok), carousel posts, influencer partnerships',
-      'Email': 'Segmented drip sequences, personalized subject lines, A/B tested CTAs',
-      'Paid ads': 'Retargeting display ads, lookalike audiences, search keyword campaigns',
-      'SMS': 'Time-sensitive flash offers, opt-in loyalty messages, cart abandonment nudges',
-      'In-app': 'Onboarding tooltips, push notifications, in-app banners at key moments',
-      'Omnichannel': 'Unified messaging across web, mobile, email, and social with consistent identity',
-    };
-    const tactics = channels.length
-      ? channels.map(c => tacticsByChannel[c] || c).join('; ')
-      : tacticsByChannel['Omnichannel'];
-
-    const kpiPool = [
-      'Click-through rate (CTR)', 'Conversion rate', 'Cost per acquisition (CPA)',
-      'Return on ad spend (ROAS)', 'Brand recall lift', 'Engagement rate',
-      'Email open rate', 'Revenue attributed', 'New user signups', 'Bounce rate reduction',
-    ];
-    const kpis = [...kpiPool].sort(() => 0.5 - Math.random()).slice(0, 6);
-
-    const objectiveVerbs = ['Drive awareness and adoption of', 'Accelerate growth for', 'Position and launch', 'Re-engage existing customers around', 'Generate qualified demand for'];
-
-    return [
-      { label: 'Objective', value: `${pick(objectiveVerbs)} ${description.slice(0, 80).trim()} by delivering a targeted, ${toneStr.toLowerCase()} campaign across ${channelsStr}.` },
+function generateBriefData(description, tone, channels) {
+  const toneStr = tone.length ? tone[0] : 'Professional';
+  const channelsStr = channels.length ? channels.join(', ') : 'Omnichannel';
+  const words = description.toLowerCase().split(/\s+/);
+  const audienceMap = {
+    gen: 'Gen Z consumers aged 18–26', millennial: 'Millennials aged 28–40',
+    business: 'B2B decision-makers', professional: 'Working professionals aged 30–50',
+    student: 'College students and young adults', parent: 'Parents aged 30–45',
+  };
+  const audience = Object.keys(audienceMap).find(k => words.includes(k))
+    ? audienceMap[Object.keys(audienceMap).find(k => words.includes(k))]
+    : 'Adults aged 25–45 with an active digital lifestyle';
+  const toneGuides = {
+    Energetic: { visual: 'bold colors, dynamic layouts, motion graphics', copy: 'punchy headlines and action-driven CTAs' },
+    Professional: { visual: 'clean lines, neutral palette, structured grids', copy: 'authoritative, data-backed messaging' },
+    Playful: { visual: 'bright palette, illustrated elements, rounded shapes', copy: 'witty micro-copy and conversational tone' },
+    Inspirational: { visual: 'aspirational photography, whitespace, warm tones', copy: 'story-driven narratives that evoke emotion' },
+    Urgent: { visual: 'high-contrast, countdown elements, bold typography', copy: 'scarcity-focused CTAs and direct language' },
+  };
+  const tg = toneGuides[toneStr] || toneGuides.Professional;
+  const tacticsByChannel = {
+    'Social media': 'Short-form video (Reels/TikTok), carousel posts, influencer partnerships',
+    'Email': 'Segmented drip sequences, personalized subject lines, A/B tested CTAs',
+    'Paid ads': 'Retargeting display ads, lookalike audiences, search keyword campaigns',
+    'SMS': 'Time-sensitive flash offers, opt-in loyalty messages, cart abandonment nudges',
+    'In-app': 'Onboarding tooltips, push notifications, in-app banners at key moments',
+    'Omnichannel': 'Unified messaging across web, mobile, email, and social with consistent identity',
+  };
+  const tactics = channels.length ? channels.map(c => tacticsByChannel[c] || c).join('; ') : tacticsByChannel['Omnichannel'];
+  const kpiPool = ['Click-through rate (CTR)', 'Conversion rate', 'Cost per acquisition (CPA)', 'Return on ad spend (ROAS)', 'Brand recall lift', 'Engagement rate', 'Email open rate', 'Revenue attributed', 'New user signups', 'Bounce rate reduction'];
+  const kpis = [...kpiPool].sort(() => 0.5 - Math.random()).slice(0, 6);
+  const verbs = ['Drive awareness and adoption of', 'Accelerate growth for', 'Position and launch', 'Generate qualified demand for'];
+  return {
+    sections: [
+      { label: 'Objective', value: `${pick(verbs)} ${description.slice(0, 80).trim()} by delivering a targeted, ${toneStr.toLowerCase()} campaign across ${channelsStr}.` },
       { label: 'Target Audience', value: `${audience} who are actively seeking solutions in this space and are receptive to ${toneStr.toLowerCase()} brand communication.` },
-      { label: 'Key Messages', value: `This is built for you | ${pick(['Quality you can trust', 'Results that speak for themselves', 'The smarter choice', 'Join thousands who already made the switch'])} | ${pick(['Limited time — act now', 'See the difference today', 'Your goals, our mission', 'Simple. Powerful. Effective.'])}` },
+      { label: 'Key Messages', value: `This is built for you | ${pick(['Quality you can trust', 'Results that speak for themselves', 'The smarter choice', 'Join thousands who already switched'])} | ${pick(['Limited time — act now', 'See the difference today', 'Your goals, our mission', 'Simple. Powerful. Effective.'])}` },
       { label: 'Channels & Tactics', value: tactics },
       { label: 'KPIs', value: kpis.join(' | ') },
-      { label: 'Creative Direction', value: `${toneStr} tone throughout. Use ${tg.visual}. Copy should lean on ${tg.copy}. Maintain brand consistency across all touchpoints with a clear, singular CTA per creative unit.` },
-    ];
-  }
+      { label: 'Creative Direction', value: `${toneStr} tone throughout. Use ${tg.visual}. Copy should lean on ${tg.copy}. Clear, singular CTA per creative unit.` },
+    ],
+    meta: { tone: toneStr, channels, channelsStr, description, audience, kpis }
+  };
+}
 
-  function renderBrief(sections) {
-    const container = document.getElementById('brief-sections');
-    container.innerHTML = '';
-    for (const s of sections) {
-      const div = document.createElement('div');
-      div.className = 'brief-section';
-      const title = document.createElement('div');
-      title.className = 'section-title';
-      title.textContent = s.label;
-      div.appendChild(title);
-
-      if (s.label === 'KPIs') {
-        const grid = document.createElement('div');
-        grid.className = 'kpi-grid';
-        s.value.split('|').forEach(kpi => {
-          const pill = document.createElement('span');
-          pill.className = 'kpi-pill';
-          pill.textContent = kpi.trim();
-          grid.appendChild(pill);
-        });
-        div.appendChild(grid);
-      } else if (s.label === 'Key Messages') {
-        const body = document.createElement('div');
-        body.className = 'section-body';
-        body.innerHTML = s.value.split('|').map(m => `• ${m.trim()}`).join('<br>');
-        div.appendChild(body);
-      } else {
-        const body = document.createElement('div');
-        body.className = 'section-body';
-        body.textContent = s.value;
-        div.appendChild(body);
-      }
-      container.appendChild(div);
+function renderBriefSections(sections) {
+  const container = document.getElementById('brief-sections');
+  container.innerHTML = '';
+  for (const s of sections) {
+    const div = document.createElement('div');
+    div.className = 'brief-section';
+    const title = document.createElement('div');
+    title.className = 'section-title';
+    title.textContent = s.label;
+    div.appendChild(title);
+    if (s.label === 'KPIs') {
+      const grid = document.createElement('div');
+      grid.className = 'kpi-grid';
+      s.value.split('|').forEach(kpi => {
+        const pill = document.createElement('span');
+        pill.className = 'kpi-pill';
+        pill.textContent = kpi.trim();
+        grid.appendChild(pill);
+      });
+      div.appendChild(grid);
+    } else if (s.label === 'Key Messages') {
+      const body = document.createElement('div');
+      body.className = 'section-body';
+      body.innerHTML = s.value.split('|').map(m => `• ${m.trim()}`).join('<br>');
+      div.appendChild(body);
+    } else {
+      const body = document.createElement('div');
+      body.className = 'section-body';
+      body.textContent = s.value;
+      div.appendChild(body);
     }
+    container.appendChild(div);
   }
+}
 
-  function setState(state) {
-    document.getElementById('empty-state').style.display = state === 'empty' ? '' : 'none';
-    document.getElementById('spinner').style.display = state === 'loading' ? 'flex' : 'none';
-    document.getElementById('brief-card').classList.toggle('visible', state === 'brief');
+function setBriefState(state) {
+  document.getElementById('empty-state').style.display = state === 'empty' ? '' : 'none';
+  document.getElementById('spinner').style.display = state === 'loading' ? 'flex' : 'none';
+  document.getElementById('brief-card').classList.toggle('visible', state === 'brief');
+}
+
+function generate() {
+  const description = document.getElementById('description').value.trim();
+  const errEl = document.getElementById('error-msg');
+  errEl.style.display = 'none';
+  if (!description) { errEl.textContent = 'Please enter a campaign description.'; errEl.style.display = 'block'; return; }
+  setBriefState('loading');
+  document.getElementById('generate-btn').disabled = true;
+  document.getElementById('brand-card').style.display = 'none';
+  document.getElementById('template-card').style.display = 'none';
+  setTimeout(() => {
+    const tone = getSelected('tone');
+    const channels = getSelected('channel');
+    currentBrief = generateBriefData(description, tone, channels);
+    renderBriefSections(currentBrief.sections);
+    setBriefState('brief');
+    document.getElementById('generate-btn').disabled = false;
+    document.getElementById('brand-card').style.display = 'block';
+    document.getElementById('brand-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 900);
+}
+
+// ── Copy brief ──────────────────────────────────────────────────
+function copyBrief() {
+  const sections = [...document.querySelectorAll('.brief-section')];
+  const text = sections.map(s => {
+    const title = s.querySelector('.section-title').textContent;
+    const body = s.querySelector('.section-body, .kpi-grid');
+    return `${title}\n${body ? body.innerText : ''}`;
+  }).join('\n\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.classList.add('copied');
+    btn.childNodes[btn.childNodes.length - 1].textContent = ' Copied!';
+    setTimeout(() => { btn.classList.remove('copied'); btn.childNodes[btn.childNodes.length - 1].textContent = 'Copy'; }, 2000);
+  });
+}
+
+// ── Color extraction from image ─────────────────────────────────
+function extractColorsFromImage(img) {
+  const canvas = document.getElementById('color-canvas');
+  const ctx = canvas.getContext('2d');
+  const size = 100;
+  canvas.width = size; canvas.height = size;
+  ctx.drawImage(img, 0, 0, size, size);
+  const data = ctx.getImageData(0, 0, size, size).data;
+  const buckets = {};
+  for (let i = 0; i < data.length; i += 16) {
+    const r = Math.round(data[i] / 32) * 32;
+    const g = Math.round(data[i+1] / 32) * 32;
+    const b = Math.round(data[i+2] / 32) * 32;
+    if (data[i+3] < 128) continue;
+    const key = `${r},${g},${b}`;
+    buckets[key] = (buckets[key] || 0) + 1;
   }
+  return Object.entries(buckets)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([k]) => { const [r,g,b] = k.split(','); return rgbToHex(+r,+g,+b); })
+    .filter(h => h !== '#000000' && h !== '#ffffff' && h !== '#e0e0e0');
+}
 
-  function generate() {
-    const description = document.getElementById('description').value.trim();
-    const errEl = document.getElementById('error-msg');
-    errEl.style.display = 'none';
-    if (!description) { errEl.textContent = 'Please enter a campaign description.'; errEl.style.display = 'block'; return; }
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map(v => Math.min(255, v).toString(16).padStart(2, '0')).join('');
+}
 
-    setState('loading');
-    document.getElementById('generate-btn').disabled = true;
-
-    setTimeout(() => {
-      const tone = getSelected('tone');
-      const channels = getSelected('channel');
-      const sections = generateBrief(description, tone, channels);
-      renderBrief(sections);
-      setState('brief');
-      document.getElementById('generate-btn').disabled = false;
-    }, 900);
-  }
-
-  function copyBrief() {
-    const sections = [...document.querySelectorAll('.brief-section')];
-    const text = sections.map(s => {
-      const title = s.querySelector('.section-title').textContent;
-      const body = s.querySelector('.section-body, .kpi-grid');
-      return `${title}\n${body ? body.innerText : ''}`;
-    }).join('\n\n');
-
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('copy-btn');
-      btn.classList.add('copied');
-      btn.querySelector('svg').style.display = 'none';
-      btn.childNodes[btn.childNodes.length - 1].textContent = ' Copied!';
-      setTimeout(() => {
-        btn.classList.remove('copied');
-        btn.querySelector('svg').style.display = '';
-        btn.childNodes[btn.childNodes.length - 1].textContent = ' Copy';
-      }, 2000);
+function renderSwatches(container, colors, onSelect) {
+  container.innerHTML = '';
+  colors.forEach((hex, i) => {
+    const sw = document.createElement('div');
+    sw.className = 'color-swatch' + (i === 0 ? ' selected' : '');
+    sw.style.background = hex;
+    sw.title = hex;
+    sw.addEventListener('click', () => {
+      container.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      sw.classList.add('selected');
+      onSelect(hex);
     });
-  }
+    container.appendChild(sw);
+  });
+}
 
-  document.getElementById('generate-btn').addEventListener('click', generate);
-  document.getElementById('regen-btn').addEventListener('click', generate);
-  document.getElementById('copy-btn').addEventListener('click', copyBrief);
+// ── Brand state ─────────────────────────────────────────────────
+let brand = { primary: '#185FA5', secondary: '#F5A623', bg: '#FFFFFF', text: '#1a1d23', logo: null };
+
+function updateBrandSummary() {
+  document.getElementById('brand-summary').style.display = 'flex';
+  document.getElementById('sw-primary').style.background = brand.primary;
+  document.getElementById('sw-secondary').style.background = brand.secondary;
+  document.getElementById('sw-bg').style.background = brand.bg;
+  document.getElementById('sw-text').style.background = brand.text;
+}
+
+// Color pickers sync
+['primary','secondary','bg','text'].forEach(key => {
+  document.getElementById('color-' + key).addEventListener('input', e => {
+    brand[key] = e.target.value;
+    updateBrandSummary();
+  });
+});
+updateBrandSummary();
+
+// URL load
+document.getElementById('load-url-btn').addEventListener('click', async () => {
+  const url = document.getElementById('brand-url').value.trim();
+  if (!url) return;
+  const note = document.getElementById('url-note');
+  const preview = document.getElementById('url-preview');
+  const iframe = document.getElementById('brand-iframe');
+  note.textContent = 'Loading…';
+  preview.style.display = 'block';
+  iframe.src = url;
+
+  // Try to fetch CSS colors
+  try {
+    const res = await fetch(url, { mode: 'cors' });
+    const html = await res.text();
+    const hexMatches = [...html.matchAll(/#([0-9a-fA-F]{6})\b/g)].map(m => '#' + m[1].toLowerCase());
+    const unique = [...new Set(hexMatches)].filter(h => h !== '#ffffff' && h !== '#000000').slice(0, 8);
+    if (unique.length) {
+      renderSwatches(document.getElementById('extracted-colors'), unique, hex => { brand.primary = hex; updateBrandSummary(); });
+      note.textContent = `${unique.length} colors extracted from page CSS.`;
+    } else {
+      note.textContent = 'No colors found in page source. Use the eyedropper to pick from the preview.';
+    }
+  } catch {
+    note.textContent = 'Could not fetch page directly (CORS). Use the eyedropper to pick colors from the preview below.';
+  }
+});
+
+// EyeDropper
+document.getElementById('eyedropper-btn').addEventListener('click', async () => {
+  if (!window.EyeDropper) {
+    alert('Eyedropper not supported in this browser. Try Chrome or Edge.');
+    return;
+  }
+  try {
+    const result = await new EyeDropper().open();
+    brand.primary = result.sRGBHex;
+    updateBrandSummary();
+    const note = document.getElementById('url-note');
+    note.textContent = `Picked: ${result.sRGBHex} — set as primary color.`;
+  } catch {}
+});
+
+// File upload
+function handleFile(file) {
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      document.getElementById('file-preview-img').src = e.target.result;
+      document.getElementById('file-preview-wrap').style.display = 'block';
+      brand.logo = e.target.result;
+      const colors = extractColorsFromImage(img);
+      if (colors.length) {
+        brand.primary = colors[0];
+        if (colors[1]) brand.secondary = colors[1];
+        updateBrandSummary();
+        renderSwatches(document.getElementById('file-extracted-colors'), colors, hex => { brand.primary = hex; updateBrandSummary(); });
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+document.getElementById('file-input').addEventListener('change', e => handleFile(e.target.files[0]));
+const dropZone = document.getElementById('drop-zone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
+
+// ── Template generation ─────────────────────────────────────────
+function contrast(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return (r*299 + g*587 + b*114) / 1000 > 128 ? '#1a1d23' : '#ffffff';
+}
+
+function buildEmailTemplate(brief, b) {
+  const logoHtml = b.logo ? `<img src="${b.logo}" alt="Logo" style="max-height:48px;max-width:160px;display:block;margin:0 auto 8px;">` : `<div style="font-size:22px;font-weight:700;color:${b.primary}">${brief.meta.description.split(' ').slice(0,2).join(' ')}</div>`;
+  const msgs = brief.sections.find(s => s.label === 'Key Messages')?.value.split('|').map(m => m.trim()) || [];
+  const objective = brief.sections.find(s => s.label === 'Objective')?.value || '';
+  const audience = brief.sections.find(s => s.label === 'Target Audience')?.value || '';
+  const ctaText = brief.meta.tone === 'Urgent' ? 'Claim Yours Now' : brief.meta.tone === 'Playful' ? "Let's Go →" : 'Get Started';
+  return `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Campaign Email</title></head>
+<body style="margin:0;padding:0;background:${b.bg};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%">
+  <!-- Header -->
+  <tr><td style="background:${b.primary};padding:28px 32px;text-align:center;border-radius:12px 12px 0 0">
+    ${logoHtml}
+  </td></tr>
+  <!-- Hero -->
+  <tr><td style="background:${b.bg};padding:36px 32px;text-align:center;border-left:1px solid #e0e3e8;border-right:1px solid #e0e3e8">
+    <h1 style="margin:0 0 12px;font-size:26px;font-weight:700;color:${b.text};line-height:1.3">${msgs[0] || 'We built this for you'}</h1>
+    <p style="margin:0 0 24px;font-size:15px;color:${b.text};opacity:0.75;line-height:1.6">${objective}</p>
+    <a href="#" style="display:inline-block;background:${b.primary};color:${contrast(b.primary)};padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none">${ctaText}</a>
+  </td></tr>
+  <!-- Messages -->
+  <tr><td style="background:${b.bg};padding:0 32px 32px;border-left:1px solid #e0e3e8;border-right:1px solid #e0e3e8">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>${msgs.slice(1,3).map(m => `<td style="width:50%;padding:16px;background:${b.bg};border:1px solid #e0e3e8;border-radius:8px;font-size:14px;color:${b.text};line-height:1.5;vertical-align:top">${m}</td>`).join('<td style="width:16px"></td>')}</tr>
+    </table>
+  </td></tr>
+  <!-- Audience note -->
+  <tr><td style="background:${b.secondary}22;padding:20px 32px;border-left:1px solid #e0e3e8;border-right:1px solid #e0e3e8">
+    <p style="margin:0;font-size:13px;color:${b.text};line-height:1.5;text-align:center">${audience}</p>
+  </td></tr>
+  <!-- Footer -->
+  <tr><td style="background:${b.primary}18;padding:20px 32px;text-align:center;border-radius:0 0 12px 12px;border:1px solid #e0e3e8;border-top:none">
+    <p style="margin:0;font-size:12px;color:${b.text};opacity:0.5">You're receiving this because you opted in. <a href="#" style="color:${b.primary}">Unsubscribe</a></p>
+  </td></tr>
+</table>
+</td></tr></table>
+</body></html>`;
+}
+
+function buildSMSTemplate(brief) {
+  const msgs = brief.sections.find(s => s.label === 'Key Messages')?.value.split('|').map(m => m.trim()) || [];
+  const tone = brief.meta.tone;
+  const urgency = tone === 'Urgent' ? ' Act now — expires tonight.' : '';
+  return `[Brand] ${msgs[0] || 'We have something for you'}.${urgency} Reply STOP to opt out.\n\n---\n\nVariant B:\n[Brand] ${msgs[1] || 'Don\'t miss out'}. Tap to see more → [link]${urgency} Reply STOP to unsubscribe.`;
+}
+
+function buildSocialTemplate(brief, b) {
+  const msgs = brief.sections.find(s => s.label === 'Key Messages')?.value.split('|').map(m => m.trim()) || [];
+  const objective = brief.sections.find(s => s.label === 'Objective')?.value || '';
+  const logoHtml = b.logo ? `<img src="${b.logo}" alt="Logo" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">` : `<div style="width:48px;height:48px;border-radius:50%;background:${b.primary};display:flex;align-items:center;justify-content:center;color:${contrast(b.primary)};font-weight:700;font-size:18px">${brief.meta.description[0].toUpperCase()}</div>`;
+  return `<!DOCTYPE html><html><body style="margin:0;padding:24px;background:#f0f2f5;font-family:-apple-system,sans-serif;display:flex;gap:16px;flex-wrap:wrap">
+<div style="width:400px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+  <div style="background:${b.primary};height:160px;display:flex;align-items:center;justify-content:center;padding:24px">
+    <div style="text-align:center">
+      <div style="font-size:22px;font-weight:700;color:${contrast(b.primary)};margin-bottom:8px">${msgs[0] || 'Campaign Headline'}</div>
+      <div style="font-size:13px;color:${contrast(b.primary)};opacity:0.8">${msgs[1] || ''}</div>
+    </div>
+  </div>
+  <div style="padding:16px;display:flex;align-items:center;gap:10px">
+    ${logoHtml}
+    <div>
+      <div style="font-size:13px;font-weight:600">Brand Name</div>
+      <div style="font-size:12px;color:#6b7280">Sponsored</div>
+    </div>
+  </div>
+  <div style="padding:0 16px 16px;font-size:13px;color:#374151;line-height:1.5">${objective.slice(0, 120)}</div>
+  <div style="padding:12px 16px;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:12px;color:#6b7280">brandname.com</span>
+    <a href="#" style="background:${b.primary};color:${contrast(b.primary)};padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none">Learn More</a>
+  </div>
+</div>
+<div style="width:400px">
+  <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+    <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;margin-bottom:8px">Caption copy</div>
+    <div style="font-size:14px;color:#374151;line-height:1.6">${msgs.join(' ✨ ')} 🔗 Link in bio.</div>
+    <div style="margin-top:10px;font-size:13px;color:${b.primary}">#campaign #brand #${brief.meta.tone.toLowerCase()}</div>
+  </div>
+</div>
+</body></html>`;
+}
+
+function buildPaidAdTemplate(brief, b) {
+  const msgs = brief.sections.find(s => s.label === 'Key Messages')?.value.split('|').map(m => m.trim()) || [];
+  const logoHtml = b.logo ? `<img src="${b.logo}" alt="Logo" style="height:32px;object-fit:contain;">` : `<span style="font-weight:700;color:${b.primary}">${brief.meta.description.split(' ').slice(0,2).join(' ')}</span>`;
+  return `<!DOCTYPE html><html><body style="margin:0;padding:24px;background:#f0f2f5;font-family:-apple-system,sans-serif;display:flex;gap:16px;flex-wrap:wrap">
+<div style="width:300px">
+  <div style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;margin-bottom:8px">Display Ad — 300×250</div>
+  <div style="width:300px;height:250px;background:${b.bg};border:1px solid #e0e3e8;border-radius:8px;overflow:hidden;display:flex;flex-direction:column">
+    <div style="background:${b.primary};padding:20px;flex:1;display:flex;align-items:center;justify-content:center;text-align:center">
+      <div style="color:${contrast(b.primary)};font-size:18px;font-weight:700;line-height:1.3">${msgs[0] || 'Headline Here'}</div>
+    </div>
+    <div style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
+      ${logoHtml}
+      <a href="#" style="background:${b.secondary};color:${contrast(b.secondary)};padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none">${brief.meta.tone === 'Urgent' ? 'Act Now' : 'Learn More'}</a>
+    </div>
+  </div>
+</div>
+<div style="width:728px">
+  <div style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;margin-bottom:8px">Leaderboard — 728×90</div>
+  <div style="width:100%;height:90px;background:${b.bg};border:1px solid #e0e3e8;border-radius:8px;display:flex;align-items:center;padding:0 24px;gap:20px;overflow:hidden">
+    ${logoHtml}
+    <div style="flex:1;font-size:16px;font-weight:600;color:${b.text}">${msgs[1] || msgs[0] || 'Ad headline'}</div>
+    <a href="#" style="background:${b.primary};color:${contrast(b.primary)};padding:10px 20px;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap">${brief.meta.tone === 'Urgent' ? 'Shop Now' : 'Get Started'}</a>
+  </div>
+</div>
+</body></html>`;
+}
+
+function buildInAppTemplate(brief, b) {
+  const msgs = brief.sections.find(s => s.label === 'Key Messages')?.value.split('|').map(m => m.trim()) || [];
+  const logoHtml = b.logo ? `<img src="${b.logo}" alt="" style="width:36px;height:36px;border-radius:8px;object-fit:cover;">` : `<div style="width:36px;height:36px;border-radius:8px;background:${b.primary};display:flex;align-items:center;justify-content:center;color:${contrast(b.primary)};font-weight:700">${brief.meta.description[0].toUpperCase()}</div>`;
+  return `<!DOCTYPE html><html><body style="margin:0;padding:24px;background:#f0f2f5;font-family:-apple-system,sans-serif;display:flex;flex-direction:column;gap:16px;max-width:400px">
+<div style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase">Push Notification</div>
+<div style="background:#fff;border-radius:14px;padding:14px;display:flex;gap:12px;align-items:flex-start;box-shadow:0 2px 12px rgba(0,0,0,0.12)">
+  ${logoHtml}
+  <div style="flex:1">
+    <div style="font-size:13px;font-weight:600;color:#1a1d23;margin-bottom:3px">Brand Name</div>
+    <div style="font-size:13px;color:#374151;line-height:1.4">${msgs[0] || 'We have something for you. Tap to see more.'}</div>
+    <div style="font-size:11px;color:#9ca3af;margin-top:4px">now</div>
+  </div>
+</div>
+<div style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase">In-app Banner</div>
+<div style="background:${b.primary};border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
+  <div style="font-size:14px;font-weight:600;color:${contrast(b.primary)};line-height:1.3;flex:1">${msgs[1] || msgs[0] || 'Special offer just for you'}</div>
+  <a href="#" style="background:${contrast(b.primary)};color:${b.primary};padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap">Tap</a>
+</div>
+<div style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase">Tooltip / Onboarding</div>
+<div style="background:#fff;border-radius:12px;padding:16px;border-left:4px solid ${b.primary};box-shadow:0 2px 8px rgba(0,0,0,0.06)">
+  <div style="font-size:13px;font-weight:600;color:#1a1d23;margin-bottom:6px">💡 ${msgs[0] || 'Pro tip'}</div>
+  <div style="font-size:13px;color:#374151;line-height:1.5">${msgs[1] || 'Here\'s something you might not know about this feature.'}</div>
+</div>
+</body></html>`;
+}
+
+function buildTemplates(brief, b) {
+  const channels = brief.meta.channels;
+  const all = channels.length === 0 || channels.includes('Omnichannel');
+  const has = ch => all || channels.includes(ch);
+  const templates = [];
+  if (has('Email')) templates.push({ label: 'Email', html: buildEmailTemplate(brief, b), type: 'html' });
+  if (has('Social media')) templates.push({ label: 'Social', html: buildSocialTemplate(brief, b), type: 'html' });
+  if (has('Paid ads')) templates.push({ label: 'Paid Ads', html: buildPaidAdTemplate(brief, b), type: 'html' });
+  if (has('SMS')) templates.push({ label: 'SMS', text: buildSMSTemplate(brief), type: 'text' });
+  if (has('In-app')) templates.push({ label: 'In-App', html: buildInAppTemplate(brief, b), type: 'html' });
+  if (templates.length === 0) templates.push({ label: 'Email', html: buildEmailTemplate(brief, b), type: 'html' });
+  return templates;
+}
+
+function renderTemplates(templates) {
+  const tabsEl = document.getElementById('template-tabs');
+  const panelsEl = document.getElementById('template-panels');
+  tabsEl.innerHTML = '';
+  panelsEl.innerHTML = '';
+
+  templates.forEach((tpl, i) => {
+    const tab = document.createElement('button');
+    tab.className = 'template-tab' + (i === 0 ? ' active' : '');
+    tab.textContent = tpl.label;
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.template-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.template-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tpl-panel-' + i).classList.add('active');
+    });
+    tabsEl.appendChild(tab);
+
+    const panel = document.createElement('div');
+    panel.className = 'template-panel' + (i === 0 ? ' active' : '');
+    panel.id = 'tpl-panel-' + i;
+
+    if (tpl.type === 'html') {
+      const previewDiv = document.createElement('div');
+      previewDiv.className = 'template-preview';
+      const iframe = document.createElement('iframe');
+      iframe.style.height = '420px';
+      iframe.setAttribute('sandbox', 'allow-same-origin');
+      previewDiv.appendChild(iframe);
+      panel.appendChild(previewDiv);
+
+      const code = document.createElement('div');
+      code.className = 'template-code';
+      code.textContent = tpl.html;
+      panel.appendChild(code);
+
+      const actions = document.createElement('div');
+      actions.className = 'template-actions';
+      actions.innerHTML = `
+        <button class="tpl-btn" id="toggle-code-${i}">Show code</button>
+        <button class="tpl-btn" id="copy-tpl-${i}">Copy HTML</button>
+        <button class="tpl-btn" id="download-tpl-${i}">Download</button>`;
+      panel.appendChild(actions);
+
+      panelsEl.appendChild(panel);
+
+      // Write iframe after it's in DOM
+      requestAnimationFrame(() => {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open(); doc.write(tpl.html); doc.close();
+      });
+
+      panel.querySelector('#toggle-code-' + i).addEventListener('click', function() {
+        const visible = code.style.display === 'block';
+        code.style.display = visible ? 'none' : 'block';
+        this.textContent = visible ? 'Show code' : 'Hide code';
+        this.classList.toggle('active-view', !visible);
+      });
+      panel.querySelector('#copy-tpl-' + i).addEventListener('click', function() {
+        navigator.clipboard.writeText(tpl.html).then(() => { this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy HTML', 2000); });
+      });
+      panel.querySelector('#download-tpl-' + i).addEventListener('click', () => {
+        const a = document.createElement('a');
+        a.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(tpl.html);
+        a.download = `${tpl.label.toLowerCase()}-template.html`;
+        a.click();
+      });
+    } else {
+      // Text (SMS)
+      const code = document.createElement('div');
+      code.className = 'template-code';
+      code.style.display = 'block';
+      code.textContent = tpl.text;
+      panel.appendChild(code);
+
+      const actions = document.createElement('div');
+      actions.className = 'template-actions';
+      actions.innerHTML = `<button class="tpl-btn" id="copy-tpl-${i}">Copy text</button>`;
+      panel.appendChild(actions);
+      panelsEl.appendChild(panel);
+      panel.querySelector('#copy-tpl-' + i).addEventListener('click', function() {
+        navigator.clipboard.writeText(tpl.text).then(() => { this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy text', 2000); });
+      });
+    }
+  });
+}
+
+document.getElementById('build-template-btn').addEventListener('click', () => {
+  if (!currentBrief) return;
+  const templates = buildTemplates(currentBrief, brand);
+  renderTemplates(templates);
+  document.getElementById('template-card').style.display = 'block';
+  document.getElementById('template-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+document.getElementById('generate-btn').addEventListener('click', generate);
+document.getElementById('regen-btn').addEventListener('click', generate);
+document.getElementById('copy-btn').addEventListener('click', copyBrief);
 </script>
 </body>
 </html>
