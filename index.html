@@ -32,11 +32,9 @@
     header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
     header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
 
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; transition: opacity 0.2s; }
-    .card.locked { opacity: 0.45; pointer-events: none; user-select: none; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
     .card-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
     .step-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; }
-    .locked .step-num { background: var(--border); }
 
     label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
     textarea { width: 100%; min-height: 110px; resize: vertical; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 0.95rem; font-family: inherit; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; }
@@ -205,13 +203,13 @@
         </div>
       </div>
       <div id="brief-sections"></div>
-      <button class="btn" id="next-to-brand-btn" style="display:none;margin-top:20px">Next: Add Brand Identity →</button>
+      <button class="btn" id="next-to-brand-btn" style="display:none;margin-top:20px">Next: Design Template →</button>
     </div>
   </div>
 
-  <!-- Step 2: Brand -->
-  <div class="card locked" id="brand-card">
-    <div class="card-title"><span class="step-num">2</span> Brand identity</div>
+  <!-- Step 2+3: Template Design (revealed inline after Next) -->
+  <div class="card" id="brand-card" style="display:none">
+    <div class="card-title"><span class="step-num">2</span> Template design</div>
     <div class="tab-bar">
       <button class="tab active" data-tab="url">🌐 URL</button>
       <button class="tab" data-tab="file">🖼 File</button>
@@ -281,17 +279,13 @@
       <span class="swatch-sm" id="sw-text"></span>
     </div>
 
-    <button class="btn" id="build-template-btn">Next: Build Template →</button>
-  </div>
+    <button class="btn" id="build-template-btn">Build Template →</button>
 
-  <!-- Step 3: Template -->
-  <div class="card locked" id="template-card">
-    <div class="card-title"><span class="step-num">3</span> Campaign template</div>
-    <div id="template-tabs" class="template-tabs"></div>
-    <div id="template-panels">
-      <div style="text-align:center;padding:40px 24px;color:var(--text-muted);font-size:0.9rem">
-        Complete steps 1 &amp; 2 to generate your template.
-      </div>
+    <!-- Template output inline -->
+    <div id="template-output" style="display:none;margin-top:24px;border-top:1px solid var(--divider);padding-top:24px">
+      <div class="card-title" style="margin-bottom:12px"><span class="step-num">3</span> Your template</div>
+      <div id="template-tabs" class="template-tabs"></div>
+      <div id="template-panels"></div>
     </div>
   </div>
 </div>
@@ -425,8 +419,8 @@ function generate() {
   setBriefState('loading');
   document.getElementById('generate-btn').disabled = true;
   document.getElementById('next-to-brand-btn').style.display = 'none';
-  document.getElementById('brand-card').classList.add('locked');
-  document.getElementById('template-card').classList.add('locked');
+  document.getElementById('brand-card').style.display = 'none';
+  document.getElementById('template-output').style.display = 'none';
   setTimeout(() => {
     const tone = getSelected('tone');
     const channels = getSelected('channel');
@@ -435,6 +429,7 @@ function generate() {
     setBriefState('brief');
     document.getElementById('generate-btn').disabled = false;
     document.getElementById('next-to-brand-btn').style.display = 'block';
+    document.getElementById('next-to-brand-btn').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, 900);
 }
 
@@ -836,8 +831,8 @@ document.getElementById('build-template-btn').addEventListener('click', () => {
   if (!currentBrief) return;
   const templates = buildTemplates(currentBrief, brand);
   renderTemplates(templates);
-  document.getElementById('template-card').classList.remove('locked');
-  document.getElementById('template-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('template-output').style.display = 'block';
+  document.getElementById('template-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
 document.getElementById('generate-btn').addEventListener('click', generate);
@@ -845,7 +840,7 @@ document.getElementById('regen-btn').addEventListener('click', generate);
 document.getElementById('copy-btn').addEventListener('click', copyBrief);
 
 document.getElementById('next-to-brand-btn').addEventListener('click', () => {
-  document.getElementById('brand-card').classList.remove('locked');
+  document.getElementById('brand-card').style.display = 'block';
   document.getElementById('brand-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 </script>
