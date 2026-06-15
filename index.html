@@ -87,60 +87,6 @@
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
 
-    /* API key modal */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.45);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 100;
-      padding: 16px;
-    }
-    .modal-overlay.hidden { display: none; }
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px;
-      width: 100%; max-width: 420px;
-    }
-    .modal h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
-    .modal p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5; }
-    .modal input {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 0.9rem;
-      font-family: monospace;
-      background: var(--bg);
-      color: var(--text);
-      outline: none;
-      margin-bottom: 14px;
-      transition: border-color 0.15s;
-    }
-    .modal input:focus { border-color: var(--accent); }
-    .modal-save {
-      width: 100%;
-      padding: 11px;
-      border: none;
-      border-radius: 8px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .modal-save:hover { opacity: 0.88; }
-    .key-hint {
-      margin-top: 14px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .key-hint button {
-      background: none; border: none; color: var(--accent);
-      font-size: 0.8rem; cursor: pointer; padding: 0;
-    }
 
     .generate-btn {
       display: block;
@@ -293,22 +239,7 @@
       </div>
     </div>
 
-    <div class="key-hint" id="key-hint" style="display:none">
-      <span>API key saved</span>
-      <button id="change-key-btn">Change key</button>
-    </div>
-
     <button class="generate-btn" id="generate-btn">Generate Brief</button>
-  </div>
-
-  <!-- API key modal -->
-  <div class="modal-overlay hidden" id="modal-overlay">
-    <div class="modal">
-      <h2>Enter your Anthropic API key</h2>
-      <p>Your key is saved only in this browser and never sent anywhere except the Anthropic API.</p>
-      <input type="password" id="api-key-input" placeholder="sk-ant-…" autocomplete="off" />
-      <button class="modal-save" id="modal-save-btn">Save & Continue</button>
-    </div>
   </div>
 
   <!-- Error -->
@@ -353,51 +284,12 @@
 </div>
 
 <script>
-  // API key stored in localStorage
-  const LS_KEY = 'mbg_api_key';
-
-  function getSavedKey() { return localStorage.getItem(LS_KEY) || ''; }
-  function saveKey(key) { localStorage.setItem(LS_KEY, key); }
-
-  function updateKeyHint() {
-    const hint = document.getElementById('key-hint');
-    hint.style.display = getSavedKey() ? 'flex' : 'none';
-  }
-
-  function openModal() {
-    document.getElementById('api-key-input').value = getSavedKey();
-    document.getElementById('modal-overlay').classList.remove('hidden');
-    document.getElementById('api-key-input').focus();
-  }
-
-  function closeModal() {
-    document.getElementById('modal-overlay').classList.add('hidden');
-  }
-
-  document.getElementById('modal-save-btn').addEventListener('click', () => {
-    const key = document.getElementById('api-key-input').value.trim();
-    if (!key) return;
-    saveKey(key);
-    updateKeyHint();
-    closeModal();
-  });
-
-  document.getElementById('api-key-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('modal-save-btn').click();
-  });
-
-  document.getElementById('change-key-btn').addEventListener('click', openModal);
-
-  // Show modal on first load if no key saved
-  if (!getSavedKey()) openModal();
-  updateKeyHint();
-
   // Chip single-select (tone) / multi-select (channel)
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
       const group = chip.dataset.group;
       if (group === 'tone') {
-        document.querySelectorAll(`[data-group="tone"]`).forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('[data-group="tone"]').forEach(c => c.classList.remove('active'));
         chip.classList.toggle('active');
       } else {
         chip.classList.toggle('active');
@@ -409,39 +301,61 @@
     return [...document.querySelectorAll(`[data-group="${group}"].active`)].map(c => c.textContent);
   }
 
-  function buildPrompt(description, tone, channels) {
+  function generateBrief(description, tone, channels) {
     const toneStr = tone.length ? tone[0] : 'Professional';
     const channelsStr = channels.length ? channels.join(', ') : 'Omnichannel';
-    return `You are a senior marketing strategist. Based on the campaign description below, create a structured marketing campaign brief. Return EXACTLY these 6 labeled sections, each on its own line starting with the label followed by a colon. Do not add any other text before or after.
 
-Objective: <one sentence campaign objective>
-Target Audience: <detailed description of the ideal customer>
-Key Messages: <2-4 core messages, separated by " | ">
-Channels & Tactics: <specific tactics for ${channelsStr}>
-KPIs: <5-7 measurable KPIs, separated by " | ">
-Creative Direction: <tone, visual style, and content direction>
+    const words = description.toLowerCase().split(/\s+/);
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
-Campaign description: ${description}
-Tone: ${toneStr}
-Channels: ${channelsStr}`;
-  }
+    const audienceMap = {
+      gen: 'Gen Z consumers aged 18–26', millennial: 'Millennials aged 28–40',
+      business: 'B2B decision-makers and team leads', professional: 'Working professionals aged 30–50',
+      student: 'College students and young adults', parent: 'Parents aged 30–45',
+      default: 'Adults aged 25–45 with disposable income and an active digital lifestyle',
+    };
+    const audience = Object.keys(audienceMap).find(k => words.includes(k))
+      ? audienceMap[Object.keys(audienceMap).find(k => words.includes(k))]
+      : audienceMap.default;
 
-  function parseResponse(text) {
-    const sections = [
-      { key: 'Objective', label: 'Objective' },
-      { key: 'Target Audience', label: 'Target Audience' },
-      { key: 'Key Messages', label: 'Key Messages' },
-      { key: 'Channels & Tactics', label: 'Channels & Tactics' },
-      { key: 'KPIs', label: 'KPIs' },
-      { key: 'Creative Direction', label: 'Creative Direction' },
+    const toneGuides = {
+      Energetic: { visual: 'bold colors, dynamic layouts, motion graphics', copy: 'punchy headlines and action-driven CTAs' },
+      Professional: { visual: 'clean lines, neutral palette, structured grids', copy: 'authoritative, data-backed messaging' },
+      Playful: { visual: 'bright palette, illustrated elements, rounded shapes', copy: 'witty micro-copy and conversational tone' },
+      Inspirational: { visual: 'aspirational photography, whitespace, warm tones', copy: 'story-driven narratives that evoke emotion' },
+      Urgent: { visual: 'high-contrast, countdown elements, bold typography', copy: 'scarcity-focused CTAs and direct language' },
+    };
+    const tg = toneGuides[toneStr] || toneGuides.Professional;
+
+    const tacticsByChannel = {
+      'Social media': 'Short-form video (Reels/TikTok), carousel posts, influencer partnerships',
+      'Email': 'Segmented drip sequences, personalized subject lines, A/B tested CTAs',
+      'Paid ads': 'Retargeting display ads, lookalike audiences, search keyword campaigns',
+      'SMS': 'Time-sensitive flash offers, opt-in loyalty messages, cart abandonment nudges',
+      'In-app': 'Onboarding tooltips, push notifications, in-app banners at key moments',
+      'Omnichannel': 'Unified messaging across web, mobile, email, and social with consistent identity',
+    };
+    const tactics = channels.length
+      ? channels.map(c => tacticsByChannel[c] || c).join('; ')
+      : tacticsByChannel['Omnichannel'];
+
+    const kpiPool = [
+      'Click-through rate (CTR)', 'Conversion rate', 'Cost per acquisition (CPA)',
+      'Return on ad spend (ROAS)', 'Brand recall lift', 'Engagement rate',
+      'Email open rate', 'Revenue attributed', 'New user signups', 'Bounce rate reduction',
     ];
-    const result = [];
-    for (const s of sections) {
-      const regex = new RegExp(`${s.key}:\\s*(.+)`, 'i');
-      const match = text.match(regex);
-      result.push({ label: s.label, value: match ? match[1].trim() : '' });
-    }
-    return result;
+    const kpis = [...kpiPool].sort(() => 0.5 - Math.random()).slice(0, 6);
+
+    const objectiveVerbs = ['Drive awareness and adoption of', 'Accelerate growth for', 'Position and launch', 'Re-engage existing customers around', 'Generate qualified demand for'];
+
+    return [
+      { label: 'Objective', value: `${pick(objectiveVerbs)} ${description.slice(0, 80).trim()} by delivering a targeted, ${toneStr.toLowerCase()} campaign across ${channelsStr}.` },
+      { label: 'Target Audience', value: `${audience} who are actively seeking solutions in this space and are receptive to ${toneStr.toLowerCase()} brand communication.` },
+      { label: 'Key Messages', value: `This is built for you | ${pick(['Quality you can trust', 'Results that speak for themselves', 'The smarter choice', 'Join thousands who already made the switch'])} | ${pick(['Limited time — act now', 'See the difference today', 'Your goals, our mission', 'Simple. Powerful. Effective.'])}` },
+      { label: 'Channels & Tactics', value: tactics },
+      { label: 'KPIs', value: kpis.join(' | ') },
+      { label: 'Creative Direction', value: `${toneStr} tone throughout. Use ${tg.visual}. Copy should lean on ${tg.copy}. Maintain brand consistency across all touchpoints with a clear, singular CTA per creative unit.` },
+    ];
   }
 
   function renderBrief(sections) {
@@ -455,7 +369,7 @@ Channels: ${channelsStr}`;
       title.textContent = s.label;
       div.appendChild(title);
 
-      if (s.label === 'KPIs' && s.value) {
+      if (s.label === 'KPIs') {
         const grid = document.createElement('div');
         grid.className = 'kpi-grid';
         s.value.split('|').forEach(kpi => {
@@ -465,7 +379,7 @@ Channels: ${channelsStr}`;
           grid.appendChild(pill);
         });
         div.appendChild(grid);
-      } else if (s.label === 'Key Messages' && s.value) {
+      } else if (s.label === 'Key Messages') {
         const body = document.createElement('div');
         body.className = 'section-body';
         body.innerHTML = s.value.split('|').map(m => `• ${m.trim()}`).join('<br>');
@@ -473,7 +387,7 @@ Channels: ${channelsStr}`;
       } else {
         const body = document.createElement('div');
         body.className = 'section-body';
-        body.textContent = s.value || '—';
+        body.textContent = s.value;
         div.appendChild(body);
       }
       container.appendChild(div);
@@ -486,60 +400,23 @@ Channels: ${channelsStr}`;
     document.getElementById('brief-card').classList.toggle('visible', state === 'brief');
   }
 
-  async function generate() {
+  function generate() {
     const description = document.getElementById('description').value.trim();
-    const apiKey = getSavedKey();
     const errEl = document.getElementById('error-msg');
     errEl.style.display = 'none';
+    if (!description) { errEl.textContent = 'Please enter a campaign description.'; errEl.style.display = 'block'; return; }
 
-    if (!description) { showError('Please enter a campaign description.'); return; }
-    if (!apiKey) { openModal(); return; }
-
-    const tone = getSelected('tone');
-    const channels = getSelected('channel');
-    const prompt = buildPrompt(description, tone, channels);
-
-    document.getElementById('generate-btn').disabled = true;
     setState('loading');
+    document.getElementById('generate-btn').disabled = true;
 
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: prompt }],
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err?.error?.message || `API error ${res.status}`);
-      }
-
-      const data = await res.json();
-      const text = data.content?.[0]?.text || '';
-      const sections = parseResponse(text);
+    setTimeout(() => {
+      const tone = getSelected('tone');
+      const channels = getSelected('channel');
+      const sections = generateBrief(description, tone, channels);
       renderBrief(sections);
       setState('brief');
-    } catch (e) {
-      setState('empty');
-      showError(e.message || 'Something went wrong. Please try again.');
-    } finally {
       document.getElementById('generate-btn').disabled = false;
-    }
-  }
-
-  function showError(msg) {
-    const el = document.getElementById('error-msg');
-    el.textContent = msg;
-    el.style.display = 'block';
+    }, 900);
   }
 
   function copyBrief() {
